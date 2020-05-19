@@ -29,7 +29,7 @@ bool FFT(Arrayc& array) {
 	int m = (int)log2(array.length);
 	int n = array.length / 2;
 	
-	if (m != 1) {
+	if (n != 1) {
 		Arrayc arrayx;
 		Arrayc arrayy;
 		Init_Arrayc(arrayx, n);
