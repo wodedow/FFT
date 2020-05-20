@@ -67,6 +67,48 @@ Arrayc FFT(Arrayc array) {
 	return arrayz;
 }
 
+Arrayc IFFT(Arrayc array) {
+	int m = (int)log2(array.length);
+	int n = array.length / 2;
+
+	Arrayc arrayz;
+	Init_Arrayc(arrayz, array.length);
+
+	if (n != 0) {
+		Arrayc arrayx;
+		Arrayc arrayy;
+
+		Init_Arrayc(arrayx, n);
+		Init_Arrayc(arrayy, n);
+		for (int i = 0; i < n; i++) {
+			arrayx.elem[i] = array.elem[2 * i];
+			arrayy.elem[i] = array.elem[2 * i + 1];
+		}
+		Arrayc arrayxx = FFT(arrayx);
+		//cout << "xTimes++" << endl;
+		Arrayc arrayyy = FFT(arrayy);
+		//cout << "yTimes++" << endl;
+
+		for (int k = 0; k < n; k++) {
+			doublec gk(0.0);
+			doublec hk(0.0);
+			for (int j = 0; j < n; j++) {
+				doublec ck(cos(-2 * pi * j * k / n), sin(-2 * pi * j * k / n));
+				gk += arrayx.elem[j] * ck;
+				hk += arrayy.elem[j] * ck;
+			}
+
+			doublec dk(cos(-pi * k / n), sin(-pi * k / n));
+			arrayz.elem[k] = gk + dk * hk;
+			arrayz.elem[k + n] = gk - dk * hk;
+		}
+	}
+
+	//cout << "Times++" << endl;
+
+	return arrayz;
+}
+
 //int main() {
 //	Arrayc xn;
 //	int length = 64;
