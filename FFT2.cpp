@@ -118,7 +118,47 @@ Arrayc FFT(Arrayc array) {
 
 	return arrayz;
 }
+Arrayc IFFT(Arrayc array) {
+	int m = (int)log2(array.length);
+	int n = array.length / 2;
 
+	Arrayc arrayz;
+	Init_Arrayc(arrayz, array.length);
+
+	if (n != 0) {
+		Arrayc arrayx;
+		Arrayc arrayy;
+
+		Init_Arrayc(arrayx, n);
+		Init_Arrayc(arrayy, n);
+		for (int i = 0; i < n; i++) {
+			arrayx.elem[i] = array.elem[2 * i];
+			arrayy.elem[i] = array.elem[2 * i + 1];
+		}
+		Arrayc arrayxx = FFT(arrayx);
+		//cout << "xTimes++" << endl;
+		Arrayc arrayyy = FFT(arrayy);
+		//cout << "yTimes++" << endl;
+		doublec nn(array.length);
+		for (int k = 0; k < n; k++) {
+			doublec gk(0.0);
+			doublec hk(0.0);
+			for (int j = 0; j < n; j++) {
+				doublec ck(cos(2 * pi * j * k / n), sin(2 * pi * j * k / n));
+				gk += arrayx.elem[j] * ck;
+				hk += arrayy.elem[j] * ck;
+			}
+
+			doublec dk(cos(pi * k / n), sin(pi * k / n));
+			arrayz.elem[k] = (gk + dk * hk) / nn;
+			arrayz.elem[k + n] = (gk - dk * hk) / nn;
+		}
+	}
+
+	//cout << "Times++" << endl;
+
+	return arrayz;
+}
 Matrixc FFT2(Matrixc img) {
 	Matrixc imgg;
 	Init_Matrixc(imgg, img.rows, img.cols);
@@ -143,7 +183,30 @@ Matrixc FFT2(Matrixc img) {
 	memset(&imgggg, 0, sizeof(imgggg));
 	return iimgg;
 }
+Matrixc IFFT2(Matrixc img) {
+	Matrixc imgg;
+	Init_Matrixc(imgg, img.rows, img.cols);
 
+	for (int i = 0; i < M; i++) {
+		Arrayc iimg = IFFT(Arr2Arrayc(img.elem[i], img.cols));
+		imgg.elem[i] = Arrc2Array(iimg, img.cols);
+	}
+	Matrixc imggg;
+	imggg = Translate(imgg);
+	Matrixc imgggg;
+	Init_Matrixc(imgggg, imggg.rows, imggg.cols);
+
+	for (int j = 0; j < N; j++) {
+		Arrayc iiimg = IFFT(Arr2Arrayc(imggg.elem[j], imggg.cols));
+		imgggg.elem[j] = Arrc2Array(iiimg, imggg.cols);
+	}
+	Matrixc iimgg = Translate(imgggg);
+
+	memset(&imgg, 0, sizeof(imgg));
+	memset(&imggg, 0, sizeof(imggg));
+	memset(&imgggg, 0, sizeof(imgggg));
+	return iimgg;
+}
 int main() {
 	Matrixc Img;
 	Init_Matrixc(Img, M, N);
@@ -164,6 +227,23 @@ int main() {
 			}
 			else {
 				cout << "(" << Img_out.elem[i][j].real() << ", " << Img_out.elem[i][j].imag() << ")" << endl;
+			}
+		}
+	}
+
+	cout << "*******************************************" << endl;
+	Matrixc Img_outin;
+	Img_outin = IFFT2(Img_out);
+	for (int i = 0; i < M; i++) {
+		for (int j = 0; j < N; j++) {
+			if (abs(Img_outin.elem[i][j]) < 1e-4) {
+				cout << "(" << "0" << ", " << "0" << ")" << endl;
+			}
+			else if (abs(Img_outin.elem[i][j].imag()) < 1e-4) {
+				cout << "(" << Img_outin.elem[i][j].real() << ", " << "0" << ")" << endl;
+			}
+			else {
+				cout << "(" << Img_outin.elem[i][j].real() << ", " << Img_outin.elem[i][j].imag() << ")" << endl;
 			}
 		}
 	}
