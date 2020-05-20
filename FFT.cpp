@@ -25,23 +25,27 @@ bool Init_Arrayc(Arrayc& array, int length) {
 	return true;
 }
 
-bool FFT(Arrayc& array) {
+Arrayc FFT(Arrayc array) {
 	int m = (int)log2(array.length);
 	int n = array.length / 2;
 	
-	if (n != 1) {
+	Arrayc arrayz;
+	Init_Arrayc(arrayz, array.length);
+
+	if (n != 0) {
 		Arrayc arrayx;
 		Arrayc arrayy;
+
 		Init_Arrayc(arrayx, n);
 		Init_Arrayc(arrayy, n);
 		for (int i = 0; i < n; i++) {
 			arrayx.elem[i] = array.elem[2 * i];
 			arrayy.elem[i] = array.elem[2 * i + 1];
 		}
-		FFT(arrayx);
-		cout << "xTimes++" << endl;
-		FFT(arrayy);
-		cout << "yTimes++" << endl;
+		Arrayc arrayxx = FFT(arrayx);
+		//cout << "xTimes++" << endl;
+		Arrayc arrayyy = FFT(arrayy);
+		//cout << "yTimes++" << endl;
 
 		for (int k = 0; k < n; k++) {
 			doublec gk(0.0);
@@ -53,14 +57,14 @@ bool FFT(Arrayc& array) {
 			}
 
 			doublec dk(cos(-pi * k / n), sin(-pi * k / n));
-			array.elem[k] = gk + dk * hk;
-			array.elem[k + n] = gk - dk * hk;
+			arrayz.elem[k] = gk + dk * hk;
+			arrayz.elem[k + n] = gk - dk * hk;
 		}
 	}
 	
 	cout << "Times++" << endl;
 
-	return true;
+	return arrayz;
 }
 
 int main() {
@@ -70,11 +74,11 @@ int main() {
 	for (int i = 0; i < size; i++) {
 		xn.elem[i] = (i);
 	}
-
-	FFT(xn);
+	Arrayc yn;
+	yn=FFT(xn);
 
 	for (int i = 0; i < xn.length; i++) {
-		cout << "(" << xn.elem[i].real() << ", " << xn.elem[i].imag() << ")  ";
+		cout << "(" << yn.elem[i].real() << ", " << yn.elem[i].imag() << ")  ";
 	}
 
 	return 1;
