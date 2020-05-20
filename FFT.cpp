@@ -62,24 +62,24 @@ Arrayc FFT(Arrayc array) {
 		}
 	}
 	
-	cout << "Times++" << endl;
+	//cout << "Times++" << endl;
 
 	return arrayz;
 }
 
-int main() {
-	Arrayc xn;
-	int size = 8;
-	Init_Arrayc(xn, size);
-	for (int i = 0; i < size; i++) {
-		xn.elem[i] = (i);
-	}
-	Arrayc yn;
-	yn=FFT(xn);
-
-	for (int i = 0; i < xn.length; i++) {
-		cout << "(" << yn.elem[i].real() << ", " << yn.elem[i].imag() << ")  ";
-	}
-
-	return 1;
-}
+//int main() {
+//	Arrayc xn;
+//	int length = 64;
+//	Init_Arrayc(xn, length);
+//	for (int i = 0; i < length; i++) {
+//		xn.elem[i] = (i);
+//	}
+//	Arrayc yn;
+//	yn=FFT(xn);
+//
+//	for (int i = 0; i < xn.length; i++) {
+//		cout << "(" << yn.elem[i].real() << ", " << yn.elem[i].imag() << ")  ";
+//	}
+//
+//	return 1;
+//}
