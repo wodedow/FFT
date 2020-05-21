@@ -3,7 +3,7 @@
 
 using namespace std;
 typedef complex<double> doublec;
-const double pi = 3.1415926;
+const double pi = 3.1415926535;
 
 const int M = 4;
 const int N = 8;
@@ -231,7 +231,7 @@ int main() {
 		}
 	}
 
-	cout << "*******************************************" << endl;
+	cout << "******************************************" << endl;
 	Matrixc Img_outin;
 	Img_outin = IFFT2(Img_out);
 	for (int i = 0; i < M; i++) {
